@@ -1,17 +1,19 @@
-function FoodChain(){
-  const INTRO = "I know an old lady who swallowed a ";
-  const ANIMALS = ["fly","spider", "bird", "cat", "dog", "goat", "cow"];
-  const COMMENT = "I don't know why she swallowed the fly. Perhaps she\'ll die.\n"
-  const SPIDER= " that wriggled and jiggled and tickled inside her";
-  const ANIMAL_COMMENT = ['', '.\nIt wriggled and jiggled and tickled inside her.\n',
-   '.\nHow absurd to swallow a bird!\n',
-   '.\nImagine that, to swallow a cat!\n',
-   '.\nWhat a hog, to swallow a dog!\n',
-   '.\nJust opened her throat and swallowed a goat!\n',
-   '.\nI don\'t know how she swallowed a cow!\n'
- ];
-  const HORSE = 'I know an old lady who swallowed a horse.\n' + 'She\'s dead, of course!\n';
+const INTRO = "I know an old lady who swallowed a ";
+const ANIMALS = [["fly"],
+                 ["spider", "that wriggled and jiggled and tickled inside her"],
+                 ["bird"], ["cat"], ["dog"], ["goat"], ["cow"], ["horse"]];
+const SUMMARY = "I don\'t know why she swallowed the fly. Perhaps she\'ll die.\n"
+const SPIDER= " that wriggled and jiggled and tickled inside her";
+const ANIMAL_COMMENT = ["", ".\nIt wriggled and jiggled and tickled inside her.\n",
+ ".\nHow absurd to swallow a bird!\n",
+ ".\nImagine that, to swallow a cat!\n",
+ ".\nWhat a hog, to swallow a dog!\n",
+ ".\nJust opened her throat and swallowed a goat!\n",
+ ".\nI don\'t know how she swallowed a cow!\n",
+ ".\nShe\'s dead, of course!\n"
+];
 
+function FoodChain(){
   this.verses = function(start, end){
     if (start > end) {
       return ""
@@ -22,37 +24,58 @@ function FoodChain(){
   }
 
   this.verse = function(num_verse){
-    if (num_verse == 8) {
-      return HORSE;
-    }
-    else {
-      return INTRO + ANIMALS[num_verse - 1] +
-      ANIMAL_COMMENT[num_verse - 1] +
-       //this.spider_description(num_verse - 1) +
-       this.reasons(num_verse - 1) +
-       ((num_verse == 1) ? ".\n" : "") + COMMENT;
-     }
+    animal = AnimalFactory.getAnimal(num_verse - 1);
+    return INTRO + animal.name + animal.comment + animal.chain_of_reasons();
   }
+}
 
-  this.reasons = function(verse){
-    if (verse == 0) {
-      return "";
-    }
-    return this.reason(verse) + ".\n" + this.reasons(verse - 1)
+function AnimalFactory(){};
+
+AnimalFactory.getAnimal = function(number){
+  if (number == 0) {
+    return new Fly();
   }
-
-  this.reason = function(verse){
-    if (verse > 0) {
-      return "She swallowed the " + ANIMALS[verse] +
-       " to catch the " + ANIMALS[verse - 1] + this.spider_description(verse);//+ ".\n"
-    }
-    else {
-      return ""
-    }
+  else if (number == 7) {
+    return new Horse();
   }
+  else {
+    return new AnimalInChain(number)
+  }
+}
 
-  this.spider_description = function(verse) {
-    return (verse == 2) ? SPIDER : ""
+function Animal(number){
+  this.number = number;
+  this.name = ANIMALS[number][0];
+  this.name_as_prey = ANIMALS[number].join(" ");
+  this.comment = ANIMAL_COMMENT[number];
+}
+
+function AnimalInChain(number) {
+  Animal.call(this,number)
+  this.next_animal = AnimalFactory.getAnimal(number - 1);
+
+  this.reason = function() {
+    return "She swallowed the " + this.name +
+     " to catch the " + this.next_animal.name_as_prey + ".\n";
+  };
+
+  this.chain_of_reasons = function() {
+    return this.reason() + this.next_animal.chain_of_reasons()
+  }
+}
+
+function Fly() {
+  Animal.call(this, 0)
+  this.chain_of_reasons = function(){
+    return SUMMARY;
+  }
+  this.comment = ".\n";
+}
+
+function Horse() {
+  Animal.call(this,7)
+  this.chain_of_reasons = function(){
+    return "";
   }
 }
 
