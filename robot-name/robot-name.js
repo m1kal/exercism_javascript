@@ -1,16 +1,14 @@
 function Robot(){
-  this.name = RobotController.generateName();
-
-  this.reset = function(){
-    this.name = RobotController.generateName();
-  }
+  this.reset();
 }
 
-function RobotController(){};
+Robot.prototype.reset = function(){
+    this.name = Robot.generateName();
+}
 
-RobotController.usedNames = "";
+Robot.usedNames = "";
 
-RobotController.generateName = function(){
+Robot.generateName = function(){
   nameString = this.randomString();
   if (this.usedNames.match(nameString)) {
     return this.generateName()
@@ -19,7 +17,7 @@ RobotController.generateName = function(){
   return nameString;
 }
 
-RobotController.randomString = function() {
+Robot.randomString = function() {
   return Math.random().toString(36).toUpperCase().match(/[A-Z]{2}/) +
     Math.random().toString().match(/[0-9]{3}/);
 }
