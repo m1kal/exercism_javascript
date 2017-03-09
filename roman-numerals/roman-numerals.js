@@ -1,5 +1,5 @@
-const DECIMAL = [1,5,10,50,100,500,1000];
-const ROMAN = 'IVXLCDM';
+const DECIMAL = [1,4,5,9,10,40,50,90,100,400,500,900,1000];
+const ROMAN = ['I','IV','V','IX','X','XL','L','XC','C','CD','D','CM','M'];
 
 function toRoman(value){
   var temp = value;
@@ -10,19 +10,7 @@ function toRoman(value){
       temp -= DECIMAL[radix_idx];
     }
   }
-  return (fix_repetitions(output));
-}
-
-function fix_repetitions(string) {
-  for(var radix_idx=0; radix_idx<ROMAN.length; radix_idx++) {
-    original = ROMAN[radix_idx].repeat(4);
-    fixed = ROMAN.substr(radix_idx,2);
-    string = string.replace(original,fixed);
-    original =ROMAN[radix_idx+1]+ROMAN[radix_idx]+ROMAN[radix_idx+1];
-    fixed = ROMAN[radix_idx]+ROMAN[radix_idx+2];
-    string = string.replace(original,fixed);
-  }
-  return string;
+  return output;
 }
 
 module.exports = toRoman;
