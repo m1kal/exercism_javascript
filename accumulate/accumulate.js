@@ -1,8 +1,6 @@
 function accumulate(collection, operation){
   var output = [];
-  for (var idx = 0; idx < collection.length; idx++) {
-    output.push(operation(collection[idx]));
-  }
+  collection.forEach(item => {output.push(operation(item))})
   return output;
 }
 
