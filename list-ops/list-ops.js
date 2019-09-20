@@ -1,17 +1,12 @@
 
 export class List {
   constructor(values = []) {
-   this.values = values;
-   return this;
-  }
-
-  unshift(value) {
-    this.values.unshift(value);
+    this.values = values;
     return this;
   }
 
   push(value) {
-    this.values.push(value);
+    this.values[this.length()] = value;
     return this;
   }
 
@@ -37,11 +32,11 @@ export class List {
   }
 
   foldl(func, initial) {
-   var reduced = initial;
-    for (var idx = 0; idx < this.values.length; idx++) {
-      reduced  = func(reduced, this.values[idx]);
-     }
-   return reduced;
+    var reduced = initial;
+    for (var elem of this.values) {
+      reduced  = func(reduced, elem);
+    }
+    return reduced;
   }
 
   foldr(func, initial) {
@@ -49,7 +44,7 @@ export class List {
   }
 
   reverse() {
-   return this.foldl((acc, elem)=> acc.unshift(elem), new List());
+    return this.foldl((acc, elem)=> new List([elem]).append(acc), new List());
   }
 }
 
