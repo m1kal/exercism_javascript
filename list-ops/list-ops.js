@@ -5,6 +5,10 @@ export class List {
     return this;
   }
 
+  [Symbol.iterator]() {
+     return this.values[Symbol.iterator]();
+  }
+
   push(value) {
     this.values[this.length()] = value;
     return this;
@@ -33,7 +37,7 @@ export class List {
 
   foldl(func, initial) {
     var reduced = initial;
-    for (var elem of this.values) {
+    for (var elem of this) {
       reduced  = func(reduced, elem);
     }
     return reduced;
