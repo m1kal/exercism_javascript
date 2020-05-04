@@ -1,4 +1,7 @@
 README.md
 *.spec.js
-node_modules
 *~
+*.json
+*.config.js
+node_modules
+.*
